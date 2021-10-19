@@ -1,40 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
-
-struct student {
-    char id[10];
-    int grade;
-    double gpa;
-    struct student *next;
-};
-
-void print_list(struct student *school) {
-    if (school == NULL) return;
-    printf("Student %s: %02dth grade, gpa of %lf\n",school->id,school->grade,school->gpa);
-    print_list(school->next);
-    return;
-}
-
-struct student *insert_front(struct student *next, char *id, int grade, double gpa) {
-    struct student *s = (struct student *) calloc(1, sizeof(struct student));
-    strncpy((char *)&(s->id), id, sizeof(s->id)-1);
-    s->grade = grade;
-    s->gpa = gpa;
-    s->next = next;
-    return s;
-}
-
-struct student *free_list(struct student *school) {
-    struct student *next = school->next;
-    while (next != NULL) {
-        free((void *) school);
-        school = next;
-        next = next->next;
-    }
-    return next;
-}
+#include "linked.h"
 
 int main() {
     // Creating Empty Linked List Of Students
@@ -54,6 +21,14 @@ int main() {
         school = insert_front(school, id, grade, gpa);
     }
     printf("Populated Linked List Of Students:\n");
+    print_list(school);
+    printf("\n");
+
+    // Removing One Person From Every Grade If Possible
+    for (int i = 1; i <= 12; i++) {
+        school = remove_node(school, i);
+    }
+    printf("Linked List Of Students With Some Removed:\n");
     print_list(school);
     printf("\n");
 
